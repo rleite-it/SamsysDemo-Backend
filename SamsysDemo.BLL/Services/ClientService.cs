@@ -23,6 +23,34 @@ namespace SamsysDemo.BLL.Services
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<MessagingHelper<List<ClientDTO>>> GetAll()
+        {
+            MessagingHelper<List<ClientDTO>> response = new();
+            try
+            {
+                List<Client> clients = await _unitOfWork.ClientRepository.GetAll();
+
+                response.Success = true;
+                response.Obj = clients.Select(x => new ClientDTO 
+                { 
+                    Id = x.Id, 
+                    Name = x.Name, 
+                    ConcurrencyToken = Convert.ToBase64String(x.ConcurrencyToken), 
+                    IsActive = x.IsActive, 
+                    BirthDate = x.BirthDate, 
+                    PhoneNumber = x.PhoneNumber 
+                }).ToList();
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.SetMessage($"Ocorreu um erro inesperado ao obter o cliente.");
+                return response;
+            }
+        }
+
 
         public async Task<MessagingHelper<ClientDTO>> Get(long id)
         {

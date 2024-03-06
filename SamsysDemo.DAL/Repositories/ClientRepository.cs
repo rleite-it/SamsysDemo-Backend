@@ -32,7 +32,12 @@ namespace SamsysDemo.DAL.Repositories
                     _context.Entry(entityToDelete).Property("ConcurrencyToken").OriginalValue = Convert.FromBase64String(concurrencyToken);
                 }
             }
-        }    
+        }
+
+        public async Task<List<Client>> GetAll()
+        {
+            return await _context.Clients.ToListAsync();
+        }
 
         public async Task<Client?> GetById(object id, string[]? includedProperties = null)
         {

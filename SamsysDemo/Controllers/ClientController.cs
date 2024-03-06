@@ -17,6 +17,12 @@ namespace SamsysDemo.Controllers
             _clientService = clientService;
         }
 
+        [HttpGet("")]
+        public async Task<MessagingHelper<List<ClientDTO>>> GetAll()
+        {
+            return await _clientService.GetAll();
+        }
+
 
         [HttpGet("{id}")]
         public async Task<MessagingHelper<ClientDTO>> Get(long id)
