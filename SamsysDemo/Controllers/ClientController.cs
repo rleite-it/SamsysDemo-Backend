@@ -24,6 +24,12 @@ namespace SamsysDemo.Controllers
             return await _clientService.Get(id);
         }
 
+        [HttpPost("")]
+        public async Task<MessagingHelper> Insert(InsertClientDTO clientToInsertDTO)
+        {
+            return await _clientService.Insert(clientToInsertDTO);
+        }
+
         [HttpPut("{id}")]
         public async Task<MessagingHelper> Update(int id, UpdateClientDTO clientToUpdateDTO)
         {

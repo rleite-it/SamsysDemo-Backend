@@ -54,33 +54,50 @@ namespace SamsysDemo.BLL.Services
                 return response;
             }
         }
+        
+        public async Task<MessagingHelper> Insert(InsertClientDTO clientToInsert)
+        {
+            MessagingHelper<Client> response = new();
+            try
+            {
+                if (string.IsNullOrEmpty(clientToInsert.Name))
+                {
+                    response.Success = false;
+                    response.SetMessage($"Campo: Nome do cliente está vazio!");
+                    return response;
+                }
 
-        //public async Task<MessagingHelper> Insert(InsertClientDTO clientToInsert)
-        //{
-        //    MessagingHelper<Client> response = new();
-        //    try
-        //    {
-        //        Client? client = await _unitOfWork.ClientRepository.GetById(id);
-        //        client.Insert(clientToInsert.Name, clientToInsert.PhoneNumber);
-        //        _unitOfWork.ClientRepository.Update(client, clientToInsert.ConcurrencyToken);
-        //        await _unitOfWork.SaveAsync();
-        //        response.Success = true;
-        //        response.Obj = client;
-        //        return response;
-        //    }
-        //    catch (DbUpdateConcurrencyException exce)
-        //    {
-        //        response.Success = false;
-        //        response.SetMessage($"Os dados do cliente foram atualizados posteriormente por outro utilizador!.");
-        //        return response;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.Success = false;
-        //        response.SetMessage($"Ocorreu um erro inesperado ao atualizar o cliente. Tente novamente.");
-        //        return response;
-        //    }
-        //}
+                if (clientToInsert.BirthDate == DateTime.MinValue && clientToInsert.BirthDate == DateTime.Now)
+                {
+                    response.Success = false;
+                    response.SetMessage($"Campo: Data de Nascimento está vazio ou incorrecto!");
+                    return response;
+                }
+
+                if (string.IsNullOrEmpty(clientToInsert.PhoneNumber))
+                {
+                    response.Success = false;
+                    response.SetMessage($"Campo: Número do telemóvel está vazio ou incorreto!");
+                    return response;
+                }
+
+                var client = new Client();
+                client.Insert(clientToInsert.Name, clientToInsert.BirthDate, clientToInsert.PhoneNumber);
+
+                await _unitOfWork.ClientRepository.Insert(client);
+                await _unitOfWork.SaveAsync();
+                response.Success = true;
+                response.Obj = client;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.SetMessage($"Ocorreu um erro inesperado ao inserir o cliente. Tente novamente.");
+                return response;
+            }
+        }
+
 
         public async Task<MessagingHelper> Update(long id, UpdateClientDTO clientToUpdate)
         {

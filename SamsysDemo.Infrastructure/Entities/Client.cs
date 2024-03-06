@@ -30,6 +30,14 @@ namespace SamsysDemo.Infrastructure.Entities
 
         public DateTime? DateRemoved { get; set; }
 
+        public void Insert(string name, DateTime birthDate, string phoneNumber)
+        {
+            Name = name;
+            PhoneNumber = phoneNumber;
+            BirthDate = birthDate;
+            IsActive = true;
+        }
+
         public void Update(string name, string phoneNumber)
         {
             Name = name;
